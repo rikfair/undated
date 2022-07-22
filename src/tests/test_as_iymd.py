@@ -24,7 +24,7 @@ import undated.utils as udu
 @dataclass
 class TestData:
     """ Test data record """
-    input_date: int
+    iymd: int
     fmt: str
     yy_pivot: Optional[str]
     answer: Optional[int]
@@ -56,9 +56,9 @@ class TestAsInt(unittest.TestCase):
 
         for i in TEST_DATA:
             self.assertEqual(
-                udu.as_iymd(i.input_date, i.fmt, i.yy_pivot),
+                udu.as_iymd(i.iymd, i.fmt, i.yy_pivot),
                 i.answer,
-                f'Unexpected answer: {i.input_date} - {i.fmt}; {i.comment}'
+                f'Unexpected answer: {i.iymd} - {i.fmt}; {i.comment}'
             )
 
 

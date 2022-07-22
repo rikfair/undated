@@ -16,6 +16,7 @@
 import datetime
 import unittest
 
+import undated as ud
 import undated._core as udc   # noqa
 
 # -----------------------------------------------
@@ -36,6 +37,15 @@ class TestDayOfWeek(unittest.TestCase):
             dt_dow = int(day.strftime('%w'))
             ud_dow = udc.day_of_week(udc.epoch_from_parts(day.year, day.month, day.day))
             self.assertEqual(ud_dow, dt_dow, f'Unexpected day: {day}')
+            # ---
+            weekday = day.isoweekday() < 6
+            self.assertEqual(
+                udc.is_weekday(day.year, day.month, day.day), weekday,
+                f'Weekday udc: {day}'
+            )
+            # ---
+            ymd = ud.YMD(day.year, day.month, day.day)
+            self.assertEqual(ymd.is_weekday(), weekday, f'Weekday ud: {day}')
 
 
 # -----------------------------------------------

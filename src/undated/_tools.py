@@ -14,10 +14,17 @@
 # -----------------------------------------------
 
 from __future__ import annotations
-from datetime import datetime, date
 from typing import Any, Optional, Tuple, Union
 
 from . import _core as udc
+
+# -----------------------------------------------
+
+_EPOCH = 1
+
+INVALID = 0
+VALID = 1
+TRUSTED = 2
 
 # -----------------------------------------------
 
@@ -51,10 +58,19 @@ class YMD:
     """ Class of date parts, year, month, day """
 
     iymd: Optional[int]
+    """ The date as an 8 digit integer, in year, month, day format """
+
     year: Optional[int]
+    """ The year element of the date, as a 4 digit integer """
+
     month: Optional[int]
+    """ The month element of the date, as a 1 or 2 digit integer. January==1, December==12 """
+
     day: Optional[int]
-    status: str = None
+    """ The day element of the date, as a 1 or 2 digit integer """
+
+    status: int = None
+    """ The status of the class. Refers to the package constants VALID, INVALID and TRUSTED """
 
     # ---
 
@@ -73,16 +89,22 @@ class YMD:
         :param trusted: bool, when trusted validation checks are skipped
         """
 
-        self.iymd, self.year, self.month, self.day = _get_parts(year_or_iymd, month, day)
         self._properties = {}
 
-        if trusted:
-            self.status = udc.TRUSTED
-        elif udc.is_valid(self.year, self.month, self.day):
-            self.status = udc.VALID
-        else:
+        if year_or_iymd is None:
             self.iymd = self.year = self.month = self.day = None
-            self.status = udc.INVALID
+            self.status = INVALID
+
+        else:
+            self.iymd, self.year, self.month, self.day = _get_parts(year_or_iymd, month, day)
+
+            if trusted:
+                self.status = TRUSTED
+            elif udc.is_valid(self.year, self.month, self.day):
+                self.status = VALID
+            else:
+                self.iymd = self.year = self.month = self.day = None
+                self.status = INVALID
 
     # ---
     # Comparison magic methods
@@ -129,7 +151,7 @@ class YMD:
 
     def __bool__(self):
         """ Called by built-int bool() method to convert a type to a bool """
-        return bool(self.status != udc.INVALID)
+        return bool(self.status != INVALID)
 
     def __int__(self):
         """ Called by built-int int() method to convert a type to an int """
@@ -156,17 +178,20 @@ class YMD:
     # ---
     # Private modules
 
-    def _get_property(self, name: str) -> Any:
+    def _get_property(self, name: int) -> Any:
         """
         Gets the ymd date property. Added when first needed,
          rather than at initialisation, for performance.
-         Only EPOCH at the moment, but more may be added.
-        :param name: str, the property name; [EPOCH]
+         Only _EPOCH at the moment, but more may be added.
+        :param name: str, the property name; [_EPOCH]
         :return: the property value
         """
 
+        if self.status == INVALID:
+            return None
+
         if name not in self._properties:
-            if name == udc.EPOCH:
+            if name == _EPOCH:
                 self._properties[name] = udc.epoch_from_parts(self.year, self.month, self.day)
 
         return self._properties[name]
@@ -174,182 +199,105 @@ class YMD:
     # ---
     # Public modules
 
-    def day_of_week(self) -> int:
+    def add_days(self, days: int) -> YMD:
         """
-        Calculates the number for day of the week. Sunday = 0, Monday = 1...
-        :return: int, the day number 0 to 6
+        Adds the specified number of days to the date.
+        Another option would be to use the addition operator ```ymd2 = ymd1 + 2```
+        :param days: The number of days to add. Use negative days to subtract days.
+        :return: YMD class
         """
 
-        return udc.day_of_week(self._get_property(udc.EPOCH))
+        return add_days(self, days)
 
     # ---
 
-    def epoch(self) -> int:
+    def add_months(self, months: int, period: bool = False) -> YMD:
         """
-        The epoch value for the date
+        Adds the specified number of months to the date
+        :param months: The number of months to add, use negative months to subtract
+        :param period: Set to True when looking for a period end date.
+        So... With period False, Jan 1st + 12 months, would be 1st Jan the following year.
+        With period set to True, it would be 31st Dec the same year.
+        :return: YMD class
+        """
+
+        return add_months(self, months, period)
+
+    # ---
+
+    def add_weekdays(self, weekdays: int) -> YMD:
+        """
+        Adds the specified number of weekdays, Monday to Friday, to the date
+        :param weekdays: The number of weekdays to add. Use negative days to subtract.
+        :return: YMD class
+        """
+
+        return add_weekdays(self, weekdays)
+
+    # ---
+
+    def add_years(self, years: int, period: bool = False) -> YMD:
+        """
+        Adds a specified number of years to the date
+        :param years: The number of years to add. Use negative years to subtract
+        :param period: Set to True when looking for a period end date.
+        So... With period False, Jan 1st + 1 year, would be 1st Jan the following year.
+        With period set to True, it would be 31st Dec the same year.
+        :return: YMD class
+        """
+
+        return add_months(self, years * 12, period=period)
+
+    # ---
+
+    def day_of_week(self) -> Union[int, None]:
+        """
+        The number for the day of the week. Sunday == 0, Monday == 1...
+        :return: The day number 0 to 6
+        """
+
+        if self.status == INVALID:
+            return None
+        return udc.day_of_week(self._get_property(_EPOCH))
+
+    # ---
+
+    def epoch(self) -> Union[int, None]:
+        """
+        An epoch value for the date, # TODO try to exclude from sphinx
         :return: int, the epoch value
         """
 
-        return self._get_property(udc.EPOCH)
-
-
-# -----------------------------------------------
-
-
-class Undated(YMD):
-    """
-    Use when encountering dates that are stored as integers, and conversion to datetime and back
-    for calculations is not desired.
-    """
-
-    def __init__(self, idate: Union[YMD, datetime, date, float, int, str], **kwargs):
-        """
-        See the properties function for valid parameters
-        :param idate: the date, converted by the properties function to YMD class.
-        :param kwargs: str, supply format if it not Ymd, Ym
-        """
-
-        self.idate = idate
-        self.options = kwargs
-        self.options['fmt'] = kwargs.get('fmt', None)
-        self.options['trusted'] = kwargs.get('trusted', False)
-        self.options['yy_pivot'] = kwargs.get('yy_pivot', None)
-
-        if isinstance(idate, YMD):
-            super(Undated, idate)
-        elif self.options['trusted']:  # Expected to be int in Ymd format.
-            super().__init__(idate, trusted=True)
-        else:
-            super().__init__(*self._idate_to_parts(idate), trusted=True)
-
-    # ---
-    # Operator magic methods
-
-    def __add__(self, other: int) -> Undated:
-        """ Called on add operation using + operator. In calendar days """
-        return Undated(add_days(super(), other))
-
-    def __sub__(self, other: int) -> Undated:
-        """ Called on subtraction operation using - operator. In calendar days """
-        return Undated(add_days(super(), other * -1))
-
-    # ---
-    # Private methods
-
-    def _idate_to_parts(
-            self,
-            idate: Union[datetime, date, float, int, str]
-    ) -> Union[Tuple[int, int, int], None]:
-        """
-        Converts idate to it's year, month, day parts
-        :param idate: int, or other type, to allow flexibility with incoming data
-        :return: tuple (year, month, day)
-        """
-
-        ymd_type = type(idate)
-        if ymd_type == int:
-            return udc.as_parts(idate, fmt=self.options['fmt'], yy_pivot=self.options['yy_pivot'])
-        if ymd_type in [datetime, date]:
-            return self._idate_to_parts(int(idate.strftime('%Y%m%d')))
-        if ymd_type == float or (ymd_type == str and idate.isdigit()):
-            return self._idate_to_parts(int(idate))
-        return None
-
-    # ---
-    # Public methods
-
-    def add_days(self, days: int) -> Undated:
-        """
-        Adds months to the date
-        :param days: int, the days to add, use negative days to subtract
-        :return: int, if inplace is false
-        """
-
-        return Undated(add_days(super(), days))
-
-    # ---
-
-    def add_months(self, months: int, period_end: bool = False) -> Undated:
-        """
-        Adds months to the date
-        :param months: int, the months to add, use negative months to subtract
-        :param period_end: bool, takes the previous day. EG: For last day of a period
-        :return: int, if inplace is false
-        """
-
-        ymd = add_months(super(), months)
-        if period_end:
-            ymd = add_days(super(), (1 if months < 0 else -1))
-        return Undated(ymd)
-
-    # ---
-
-    def add_weekdays(self, weekdays: int) -> Undated:
-        """
-        Adds months to the date
-        :param weekdays: int, the days to add, use negative days to subtract
-        :return: int, if inplace is false
-        """
-
-        return Undated(add_weekdays(super(), weekdays))
-
-    # ---
-
-    def add_years(self, years: int, period_end: bool = False) -> Undated:
-        """
-        Adds years to the date
-        :param years: int, the years to add, use negative years to subtract
-        :param period_end: bool, takes the previous day. EG: For last day of a period
-        """
-
-        return self.add_months(years * 12, period_end=period_end)
-
-    # ---
-
-    def as_type(self) -> Union[date, datetime, float, int, str, None]:
-        """
-        Converts ymd back to the initial type and format.
-        :return: The ymd value in the initial type and format
-        """
-
-        idate_type = type(self.idate)
-        if idate_type in [float, int, str]:
-            return idate_type(self.iymd // (100 if self.options['fmt'] == 'Ym' else 1))
-        if idate_type == type(None):  # noqa, ide advises isinstance but it can't with NoneType
-            return None
-        dtt = datetime.strptime(str(self.iymd), '%Y%m%d')
-        return dtt if idate_type == datetime else dtt.date()
-
-    # ---
-
-    def day_of_week(self) -> int:
-        """
-        Calculates the number for day of the week. Sunday = 0, Monday = 1...
-        :return: int, the day number 0 to 6
-        """
-
-        return udc.day_of_week(self._get_property(udc.EPOCH))
+        return self._get_property(_EPOCH)
 
     # ---
 
     def is_leap_year(self) -> bool:
         """
-        Calculates if the year a leap year
-        :return: bool, true when it is a leap year
+        Is the date falling within a leap year
+        :return: True when the date falls in a leap year
         """
 
+        if self.status == INVALID:
+            return False
         return bool(udc.is_leap_year(self.year))
 
     # ---
 
     def is_weekday(self) -> bool:
         """
-        Calculates if the date is a weekday, Monday - Friday
-        :return: bool, true when it is a weekday
+        Is the date falling on a weekday, IE between Monday and Friday
+        :return: True when it is a weekday
         """
 
-        return bool(self.day_of_week() < 5)
+        if self.status == INVALID:
+            return False
+        return 0 < udc.day_of_week(self._get_property(_EPOCH)) < 6
 
+
+# ---
+
+INVALID_YMD = YMD(0)
 
 # -----------------------------------------------
 
@@ -362,21 +310,30 @@ def add_days(ymd: YMD, days: int) -> YMD:
     :return: YMD class
     """
 
+    if ymd.status == INVALID:
+        return INVALID_YMD
     return epoch_to_ymd(ymd.epoch() + days)
 
 
 # -----------------------------------------------
 
 
-def add_months(ymd: YMD, months: int) -> YMD:
+def add_months(ymd: YMD, months: int, period: bool = False) -> YMD:
     """
     Adds given months to a date. Use negative months to subtract months
     :param ymd: YMD class
     :param months: int, the number of months
+    :param period: bool, takes the previous day. EG: For last day of a period
     :return: YMD class
     """
 
-    return YMD(*udc.add_months(ymd.year, ymd.month, ymd.day, months), trusted=True)
+    if ymd.status == INVALID:
+        return INVALID_YMD
+
+    year, month, day = udc.add_months(ymd.year, ymd.month, ymd.day, months)
+    if period:
+        return epoch_to_ymd(udc.epoch_from_parts(year, month, day) + (1 if months < 0 else -1))
+    return YMD(year, month, day, trusted=True)
 
 
 # -----------------------------------------------
@@ -390,6 +347,9 @@ def add_weekdays(ymd: YMD, weekdays: int) -> YMD:
     :return: YMD class
     """
 
+    if ymd.status == INVALID:
+        return INVALID_YMD
+
     return YMD(
         *udc.add_weekdays(ymd.epoch(), weekdays),
         trusted=True
@@ -399,7 +359,7 @@ def add_weekdays(ymd: YMD, weekdays: int) -> YMD:
 # -----------------------------------------------
 
 
-def days_between(from_ymd: YMD, to_ymd: YMD) -> int:
+def days_between(from_ymd: YMD, to_ymd: YMD) -> Union[int, None]:
     """
     Calculates the days between two dates
     :param from_ymd: YMD, the from date YMD class
@@ -407,6 +367,8 @@ def days_between(from_ymd: YMD, to_ymd: YMD) -> int:
     :return: int, the days between the dates
     """
 
+    if from_ymd.status == INVALID or to_ymd.status == INVALID:
+        return None
     return to_ymd.epoch() - from_ymd.epoch()
 
 
@@ -426,13 +388,16 @@ def epoch_to_ymd(epoch: int) -> YMD:
 # -----------------------------------------------
 
 
-def months_between(from_ymd: YMD, to_ymd: YMD) -> int:
+def months_between(from_ymd: YMD, to_ymd: YMD) -> Union[int, None]:
     """
     Calculates the complete months between two dates
     :param from_ymd: YMD class
     :param to_ymd: YMD class
     :return: int, the complete months between the dates
     """
+
+    if from_ymd.status == INVALID or to_ymd.status == INVALID:
+        return None
 
     if from_ymd.iymd < to_ymd.iymd:
         ymd1 = from_ymd
@@ -458,7 +423,7 @@ def months_between(from_ymd: YMD, to_ymd: YMD) -> int:
 # -----------------------------------------------
 
 
-def quarter(ymd: YMD, to_str: bool = True) -> Union[int, str]:
+def quarter(ymd: YMD, to_str: bool = True) -> Union[int, str, None]:
     """
     Calculates the quarter from a year, returning the quarter end month, or quarter number
     :param ymd: YMD class
@@ -466,13 +431,15 @@ def quarter(ymd: YMD, to_str: bool = True) -> Union[int, str]:
     :return: str 2021Q1, 2021Q2, 2021Q3, 2021Q4; or int 202103, 202106, 202109, 202112
     """
 
+    if ymd.status == INVALID:
+        return None
     return udc.quarter(ymd.year, ymd.month, to_str)
 
 
 # -----------------------------------------------
 
 
-def weekdays_between(from_ymd: YMD, to_ymd: YMD, inclusive: bool = False) -> int:
+def weekdays_between(from_ymd: YMD, to_ymd: YMD, inclusive: bool = False) -> Union[int, None]:
     """
     Calculates the number of weekdays between two dates
     :param from_ymd: YMD class
@@ -480,6 +447,9 @@ def weekdays_between(from_ymd: YMD, to_ymd: YMD, inclusive: bool = False) -> int
     :param inclusive: bool, whether to include the to date as a completed day
     :return: int, the number of days between the dates
     """
+
+    if from_ymd.status == INVALID or to_ymd.status == INVALID:
+        return None
 
     return udc.weekdays_between_epochs(
         from_ymd.epoch(),

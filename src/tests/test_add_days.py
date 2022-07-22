@@ -95,6 +95,16 @@ class TestAddDays(unittest.TestCase):
                 dbtwn_ud_ans = ud.days_between(ud.YMD(i.iymd), ud.YMD(adday_ans, trusted=True))
                 self.assertEqual(dbtwn_ans, dbtwn_ud_ans, f'Days between ud: {i} ({j}')
 
+    # ---
+
+    def test_invalid(self):
+        """ Tests invalid parameters are handled as expected """
+
+        ymd = ud.YMD(0)
+        self.assertEqual(ymd.iymd, None, 'Invalid ymd')
+        self.assertEqual(ud.add_days(ymd, 1), ud.INVALID_YMD)
+        self.assertEqual(ud.days_between(ymd, ud.YMD(20220101)), None)
+
 
 # -----------------------------------------------
 

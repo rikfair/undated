@@ -32,13 +32,6 @@ FORMAT_PARTS = {'Y': 4, 'y': 2, 'm': 2, 'd': 2}
 
 THIS_YEAR = int(datetime.date.today().strftime('%Y'))
 
-# ---
-
-EPOCH = 'epoch'
-INVALID = 'invalid'
-TRUSTED = 'trusted'
-VALID = 'valid'
-
 # -----------------------------------------------
 
 
@@ -286,6 +279,21 @@ def is_valid(year: int, month: int, day: int) -> bool:
         return True
     except ValueError:
         return False
+
+
+# -----------------------------------------------
+
+
+def is_weekday(year: int, month: int, day: int) -> bool:
+    """
+    Calculates if the date is a weekday, Monday - Friday
+    :param year: int, the year
+    :param month: int, the month, Jan = 1
+    :param day: int, the day of the month
+    :return: bool, true when it is a weekday
+    """
+
+    return 0 < day_of_week(epoch_from_parts(year, month, day)) < 6
 
 
 # -----------------------------------------------

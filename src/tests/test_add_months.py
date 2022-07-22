@@ -19,6 +19,7 @@ from dataclasses import dataclass
 
 from dateutil.relativedelta import relativedelta
 
+import undated as ud
 import undated.utils as udu
 
 # -----------------------------------------------
@@ -27,7 +28,7 @@ import undated.utils as udu
 @dataclass
 class TestData:
     """ Test data record """
-    input_date: int
+    iymd: int
     months: int
     answer: int
     comment: str
@@ -84,10 +85,18 @@ class TestAddMonths(unittest.TestCase):
 
         for i in TEST_DATA:
             self.assertEqual(
-                udu.add_months(i.input_date, i.months),
-                datetime_answer(i.input_date, i.months),
-                f'Unexpected answer: {i.input_date} + {i.months}; {i.comment}'
+                udu.add_months(i.iymd, i.months),
+                datetime_answer(i.iymd, i.months),
+                f'Unexpected answer: {i.iymd} + {i.months}; {i.comment}'
             )
+
+    # ---
+
+    def test_invalid(self):
+        """ Tests invalid parameters are handled as expected """
+
+        ymd = ud.YMD(0)
+        self.assertEqual(ud.add_months(ymd, 1), ud.INVALID_YMD)
 
 
 # -----------------------------------------------

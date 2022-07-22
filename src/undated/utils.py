@@ -183,6 +183,19 @@ def is_valid(iymd: int) -> bool:
 # -----------------------------------------------
 
 
+def is_weekday(iymd: int) -> bool:
+    """
+    Calculates if the date is a weekday, Monday - Friday
+    :param iymd: int, the date in Ymd format
+    :return: bool, true when it is a weekday
+    """
+
+    return udc.is_weekday(*udc.explode_iymd(iymd))
+
+
+# -----------------------------------------------
+
+
 def months_between(from_iymd: Union[int, udt.YMD], to_iymd: Union[int, udt.YMD]) -> int:
     """
     Calculates the complete months between two dates
