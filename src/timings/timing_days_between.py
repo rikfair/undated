@@ -33,11 +33,11 @@ def run_timings(number=10_000, iymd=2019_01_15, data=None):
     for i in data:
         print(f'\nTiming days between, day: {i}')
 
-        test_a = timeit.timeit(lambda: udu.days_between(iymd, i), number=number)
+        test_a = timeit.timeit(lambda i_=i: udu.days_between(iymd, i_), number=number)
         print(f'-Utils......: {test_a}')
 
         test_b = timeit.timeit(
-            lambda: ud.days_between(ymd, ud.YMD(i, trusted=True)),
+            lambda i_=i: ud.days_between(ymd, ud.YMD(i_, trusted=True)),
             number=number
         )
         print(f'-Tools......: {test_b}')

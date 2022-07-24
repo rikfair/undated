@@ -14,16 +14,14 @@
 
 from __future__ import annotations
 from dataclasses import dataclass
-from datetime import datetime, date
-from typing import Tuple, Union
+from typing import Union
 
 from . import _core as udc
 from . import _data as udd
 
 # -----------------------------------------------
 
-THIS_YEAR = int(date.today().strftime('%Y'))
-PIVOT_YEAR = THIS_YEAR - 80
+PIVOT_YEAR = udc.THIS_YEAR - 80
 
 # -----------------------------------------------
 # Keys
@@ -132,7 +130,7 @@ def _split_str(string: str) -> list:
 def _separators(sdate):
     """ Standardises the separator to a tab character """
 
-    for sep in [' ', '-', '/']:
+    for sep in [' ', '-', '/', '.']:
         sdate = sdate.replace(sep, '\t')
 
     return sdate.strip('\t')
@@ -212,51 +210,6 @@ def _y2_to_y4(year: int, yy_pivot: int) -> int:
 # -----------------------------------------------
 
 
-def as_iymd(
-        idate: Union[datetime, date, float, int, str],
-        fmt: str = 'Ymd',
-        yy_pivot: Union[int, None] = None
-) -> Union[int, None]:
-    """
-    Converts idate to its year, month, day parts
-    :param idate: int, or other type, to allow flexibility with incoming data
-    :param fmt: str, the date format
-    :param yy_pivot: int, the year for two digit years to pivot at
-    :return: tuple (year, month, day)
-    """
-
-    return udc.glue_parts(*as_parts(idate, fmt, yy_pivot))
-
-
-# -----------------------------------------------
-
-
-def as_parts(
-        idate: Union[datetime, date, float, int, str],
-        fmt: str = 'Ymd',
-        yy_pivot: Union[int, None] = None
-) -> Union[Tuple[int, int, int], None]:
-    """
-    Converts idate to its year, month, day parts
-    :param idate: int, or other type, to allow flexibility with incoming data
-    :param fmt: str, the date format
-    :param yy_pivot: int, the year for two digit years to pivot at
-    :return: tuple (year, month, day)
-    """
-
-    ymd_type = type(idate)
-    if ymd_type == int:
-        return udc.as_parts(idate, fmt=fmt, yy_pivot=yy_pivot)
-    if ymd_type in [datetime, date]:
-        return udc.as_parts(int(idate.strftime('%Y%m%d')), 'Ymd')
-    if ymd_type == float or (ymd_type == str and idate.isdigit()):
-        return udc.as_parts(int(idate), fmt=fmt, yy_pivot=yy_pivot)
-    return None
-
-
-# -----------------------------------------------
-
-
 @dataclass
 class UndatedFormat:
     """ x """
@@ -272,6 +225,7 @@ class UndatedFormat:
 def convert_format(fmt: str) -> UndatedFormat:
     """
     Converts the basic string format into UndatedFormat
+
     :param fmt: The string format, EG Ymd, ymd, etc
     """
 
@@ -308,6 +262,7 @@ def convert_format(fmt: str) -> UndatedFormat:
 def convert_to_parts(sdate: Union[int, str], fmt: [str, UndatedFormat]) -> Union[tuple, None]:
     """
     Converts the sdate to year, month, day, based on the format
+
     :param sdate: the date as a str or int
     :param fmt: the date format, as either a basic format as a string, or a derived format
     """
@@ -461,29 +416,13 @@ class Deriver:
         """ Processes the date if text is found within the date string """
 
         results = []
-        found = None
-        stext = _standardise_text(sdate)
-        orig_parts = stext.split('\t') if '\t' in stext else _split_str(stext)
+        sdate = _standardise_text(sdate)
+        orig_parts = sdate.split('\t') if '\t' in sdate else _split_str(sdate)
         used_parts = []
 
         # ---
 
-        for i, part in enumerate(orig_parts):
-            if part.isdigit():
-                used_parts.append(i)
-            else:
-                for lang, months in udd.MONTH_NAMES.items():
-                    if not self.params[LANGUAGES] or lang in self.params[LANGUAGES]:
-                        for imonth, smonth in enumerate(months):
-                            if part == smonth:
-                                if found:
-                                    return [], tuple()
-                                found = lang, i, len(used_parts), str(imonth + 1).zfill(2)
-                                used_parts.append(i)
-                                break
-
-        # ---
-
+        found = self._text_month_find(orig_parts, used_parts)
         if not found:
             return [], tuple()
 
@@ -505,11 +444,38 @@ class Deriver:
         return results, (found[0], found[1], used_parts)
 
     # ---
+
+    def _text_month_find(self, orig_parts, used_parts):
+        """ Searches the text month for only one possible language """
+
+        found = False
+
+        lang_months = [
+            (lng, mth) for lng, mth in udd.MONTH_NAMES.items()
+            if not self.params[LANGUAGES] or lng in self.params[LANGUAGES]
+        ]
+
+        for i, part in enumerate(orig_parts):
+            if part.isdigit():
+                used_parts.append(i)
+            else:
+                for lang, months in lang_months:
+                    for imon in [_i for _i, _m in enumerate(months) if part == _m]:
+                        if found:
+                            return False
+                        found = lang, i, len(used_parts), str(imon + 1).zfill(2)
+                        used_parts.append(i)
+                        break
+
+        return found
+
+    # ---
     # Public methods
 
     def search(self, dates: Union[list, str, tuple]) -> Union[UndatedFormat, None]:
         """
         Search through a list of dates to derive the date format
+
         :param dates: list or tuple of dates to search. Or str for one date
         :return: the derived UndatedFormat
         """
@@ -531,11 +497,11 @@ class Deriver:
             if not sdate.isdigit():
                 sdate = self._expunge_time(sdate, steps)
             if sdate.isdigit():
-                if expected_len - 2 < len(sdate) <= expected_len:
-                    # Checking one character shorter, as assume leading zero may be lost
-                    formats = self._only_digits(sdate, expected_len)
-                else:
-                    formats = []
+                formats = (
+                    self._only_digits(sdate, expected_len)
+                    if expected_len - 2 < len(sdate) <= expected_len
+                    else []
+                )
             else:
                 sdate = _separators(sdate)
                 no_seps = sdate.replace('\t', '')
@@ -562,25 +528,26 @@ class Deriver:
     def set_parameters(self, params: dict):
         """
         Sets the optional parameters for the search
+
         :param params: possible parameters; hints, languages, yy_pivot
         """
 
-        for k, v in params.items():
-            if k in [HINTS, LANGUAGES] and isinstance(v, str):
-                v = [v]
-            elif k == YY_PIVOT:
-                v = _validated_yy_pivot(v)
+        for key, val in params.items():
+            if key in [HINTS, LANGUAGES] and isinstance(val, str):
+                val = [val]
+            elif key == YY_PIVOT:
+                val = _validated_yy_pivot(val)
             # ---
-            if k == LANGUAGES:  # Expand two character codes
+            if key == LANGUAGES:  # Expand two character codes
                 langs = []
-                for lang in v:
+                for lang in val:
                     if len(lang) == 2:
                         langs.extend([f'{lang}1', f'{lang}2'])
                     else:
                         langs.append(lang)
-                self.params[k] = langs
+                self.params[key] = langs
             else:
-                self.params[k] = v
+                self.params[key] = val
 
 
 # -----------------------------------------------

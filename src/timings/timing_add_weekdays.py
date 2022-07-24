@@ -30,9 +30,9 @@ def run_timings(number=10_000, ymd=2019_01_15, days=None):
 
     for day in days:
         print(f'\nTiming add weekdays, day: {day}')
-        test_a = timeit.timeit(lambda: udu.add_weekdays(ymd, day), number=number)
+        test_a = timeit.timeit(lambda d=day: udu.add_weekdays(ymd, d), number=number)
         print(f'-Utils...: {test_a}')
-        test_b = timeit.timeit(lambda: ud.add_weekdays(converted_ymd, day), number=number)
+        test_b = timeit.timeit(lambda d=day: ud.add_weekdays(converted_ymd, d), number=number)
         print(f'-Tools...: {test_b}')
 
 

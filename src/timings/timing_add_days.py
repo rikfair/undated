@@ -29,11 +29,11 @@ def run_timings(number=10_000, ymd=2020_01_15, days=None):
 
     for day in days:
         print(f'\nTiming days: {day}')
-        test_a = timeit.timeit(lambda: udu.add_days(ymd, day), number=number)
+        test_a = timeit.timeit(lambda d=day: udu.add_days(ymd, d), number=number)
         print(f'-Undated...: {test_a}')
-        test_b = timeit.timeit(lambda: int(
+        test_b = timeit.timeit(lambda d=day: int(
             (datetime.datetime.strptime(str(ymd), '%Y%m%d')
-             + datetime.timedelta(days=day)).strftime('%Y%m%d')), number=number)
+             + datetime.timedelta(days=d)).strftime('%Y%m%d')), number=number)
         print(f'-DateTime..: {test_b}')
 
 

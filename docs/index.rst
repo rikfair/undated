@@ -1,39 +1,29 @@
 .. undated documentation master file, created by
    sphinx-quickstart on Sun Jul 17 23:13:10 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Welcome to undated's documentation!
-===================================
-
-undated
-=======
-
-.. automodule:: undated
-   :imported-members:
-   :members:
-   :undoc-members:
-   :exclude-members: datetime, date, epoch, epoch_to_ymd
-
-undated.fmts
-=============
-
-.. automodule:: undated.fmts
-   :members:
-
-undated.utils
-=============
-
-.. automodule:: undated.utils
-   :members:
+.. include:: ../README.rst
 
 .. toctree::
-   :maxdepth: 3
+   :caption: UNDATED
+   :hidden:
+   :maxdepth: 1
 
+   Overview <self>
+   Examples <examples>
 
+.. toctree::
+   :caption: API DOCUMENTATION
+   :hidden:
+   :maxdepth: 1
 
-Indices and tables
-==================
+   undated
+   undated.fmts <fmts>
+   undated.utils <utils>
+ 
+.. toctree::
+   :caption: REFERENCE
+   :hidden:
+   :maxdepth: 1
 
-* :ref:`genindex`
-* :ref:`search`
+   Change Log <changes>
+   Index <genindex>

@@ -34,13 +34,13 @@ def run_timings(number=10_000, iymd=2019_01_15, months=None):
 
     for mth in months:
         print(f'\nTiming months: {mth}')
-        test_a = timeit.timeit(lambda: udu.add_months(iymd, mth), number=number)
+        test_a = timeit.timeit(lambda m=mth: udu.add_months(iymd, m), number=number)
         print(f'-Utils.....: {test_a}')
-        test_b = timeit.timeit(lambda: ud.add_months(ymd, mth), number=number)
+        test_b = timeit.timeit(lambda m=mth: ud.add_months(ymd, m), number=number)
         print(f'-Tools.....: {test_b}')
-        test_c = timeit.timeit(lambda: int(
+        test_c = timeit.timeit(lambda m=mth: int(
             (datetime.datetime.strptime(str(iymd), '%Y%m%d')
-             + relativedelta(months=mth)).strftime('%Y%m%d')), number=number)
+             + relativedelta(months=m)).strftime('%Y%m%d')), number=number)
         print(f'-DateTime..: {test_c}')
 
 

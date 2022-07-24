@@ -26,6 +26,7 @@ from . import _tools as udt
 def add_days(iymd: int, days: int) -> int:
     """
     Adds a number of days to a date in in Ymd format
+
     :param iymd: int, the date in Ymd format
     :param days: int, the number of days to add
     :return: int, the new date in Ymd format
@@ -42,6 +43,7 @@ def add_days(iymd: int, days: int) -> int:
 def add_months(iymd: int, months: int) -> int:
     """
     Adds given months to a date. Use negative months to subtract months
+
     :param iymd: int, the date in Ymd format
     :param months: int, the number of months
     :return: int, the new date
@@ -56,6 +58,7 @@ def add_months(iymd: int, months: int) -> int:
 def add_weekdays(iymd: int, weekdays: int) -> int:
     """
     Adds a number of weekdays, monday to friday, to a date in in Ymd format
+
     :param iymd: int, the date in Ymd format
     :param weekdays: int, the number of days to add
     :return: int, the new date in Ymd format
@@ -76,6 +79,7 @@ def as_datetime(
         rtype: str = 'datetime') -> Union[datetime.datetime, datetime.date, None]:
     """
     Returns as_ymd function as a datetime or date
+
     :param iymd: int or str, the date value, missing month or day defaults to 1.
     :param fmt: str, the date format. Valid values: Yymd, in any order.
     :param yy_pivot: the pivot year for two digit years
@@ -98,6 +102,7 @@ def as_datetime(
 def as_iymd(idate: Union[int, str], fmt: str, yy_pivot: int = None) -> Union[int, None]:
     """
     Converts the ymd input to the Ymd format from the given format
+
     :param idate: int or str, the date value, missing month or day defaults to 1.
     :param fmt: str, the date format. Valid values: Yymd, in any order.
     :param yy_pivot: the pivot year for two digit years
@@ -114,6 +119,7 @@ def as_iymd(idate: Union[int, str], fmt: str, yy_pivot: int = None) -> Union[int
 def as_ymd(iymd: Union[int, str], fmt: str, yy_pivot: int = None) -> Union[udt.YMD, None]:
     """
     Converts the ymd input to the Ymd format from the given format
+
     :param iymd: int or str, the date value, missing month or day defaults to 1.
     :param fmt: str, the date format. Valid values: Yymd, in any order.
     :param yy_pivot: the pivot year for two digit years
@@ -130,6 +136,7 @@ def as_ymd(iymd: Union[int, str], fmt: str, yy_pivot: int = None) -> Union[udt.Y
 def day_of_week(iymd: int) -> int:
     """
     Calculates the number for day of the week. Sunday = 0, Monday = 1...
+
     :param iymd: int, date in Ymd format
     :return: int, the day number 0 to 6
     """
@@ -143,6 +150,7 @@ def day_of_week(iymd: int) -> int:
 def days_between(from_iymd: int, to_iymd: int) -> int:
     """
     Calculates the days between two dates
+
     :param from_iymd: int, the from date in Ymd format
     :param to_iymd: int, the to date in Ymd format
     :return: int, the days between the dates
@@ -160,6 +168,7 @@ def days_between(from_iymd: int, to_iymd: int) -> int:
 def is_leap_year(year: int) -> int:
     """
     Is the year a leap year
+
     :param year: int, the year
     :return: int, 1 for leap year, 0 not a leap year
     """
@@ -173,6 +182,7 @@ def is_leap_year(year: int) -> int:
 def is_valid(iymd: int) -> bool:
     """
     Checks the date is valid. Year expected to be between 1583 and 9999
+
     :param iymd: int, the date in Ymd format
     :return: bool, is the date is a valid date or not
     """
@@ -186,6 +196,7 @@ def is_valid(iymd: int) -> bool:
 def is_weekday(iymd: int) -> bool:
     """
     Calculates if the date is a weekday, Monday - Friday
+
     :param iymd: int, the date in Ymd format
     :return: bool, true when it is a weekday
     """
@@ -199,6 +210,7 @@ def is_weekday(iymd: int) -> bool:
 def months_between(from_iymd: Union[int, udt.YMD], to_iymd: Union[int, udt.YMD]) -> int:
     """
     Calculates the complete months between two dates
+
     :param from_iymd: int or YMD, the from date in Ymd or Ym format
     :param to_iymd: int or YMD, the from date in Ymd or Ym format
     :return: int, the complete months between the dates
@@ -215,6 +227,7 @@ def months_between(from_iymd: Union[int, udt.YMD], to_iymd: Union[int, udt.YMD])
 def quarter(iymd: int, to_str: bool = True) -> Union[int, str]:
     """
     Calculates the quarter from a year, returning the quarter end month, or quarter number
+
     :param iymd: int, the date in Ymd or Ym format
     :param to_str: boolean, true returns 2021Q3, otherwise 202103 format
     :return: str 2021Q1, 2021Q2, 2021Q3, 2021Q4; or int 202103, 202106, 202109, 202112
@@ -230,6 +243,7 @@ def quarter(iymd: int, to_str: bool = True) -> Union[int, str]:
 def weekdays_between(from_iymd: int, to_iymd: int, inclusive: bool = False) -> int:
     """
     Calculates the complete months between two dates
+
     :param from_iymd: int, the from date in Ymd format
     :param to_iymd: int, the from date in Ymd format
     :param inclusive: bool, whether to include the to date as a completed day

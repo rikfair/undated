@@ -27,7 +27,7 @@ def run_timings(number=10_000, quarters=None):
 
     for quarter in quarters:
         print(f'\nTiming quarter: {quarter}')
-        test_a = timeit.timeit(lambda: ud.quarter(quarter), number=number)
+        test_a = timeit.timeit(lambda q=quarter: ud.quarter(q), number=number)
         print(f'-Undated...: {test_a}')
 
 

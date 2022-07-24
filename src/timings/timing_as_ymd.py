@@ -14,22 +14,20 @@
 
 import timeit
 
-import undated as ud
+import undated.utils as udu
 
 # -----------------------------------------------
 
 
-def run_timings(number=10_000, ymd=2019_01_15, data=None):
+def run_timings(number=10_000, data=None):
     """ Executes the timing routine. """
-
-    converted_ymd = ud.YMD(ymd)
 
     if not data:
         data = [(2022_01_01, 'Ymd'), (2022_01, 'Ym'), (12_01_22, 'mdy')]
 
     for i in data:
         print(f'\nTiming as_ymd: {i}')
-        test_a = timeit.timeit(lambda: ud.as_ymd(*i), number=number)
+        test_a = timeit.timeit(lambda i_=i: udu.as_ymd(*i_), number=number)
         print(f'-Undated...: {test_a}')
 
 

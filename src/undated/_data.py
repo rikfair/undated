@@ -1,4 +1,12 @@
+"""
+Data for use within the package
+"""
+
 # -----------------------------------------------
+# Disabling line too long, as these are just months of the year
+#   and preferable to have each list on a single line
+
+# pylint: disable=line-too-long
 
 MONTH_NAMES = {
     'DE1': ['JAN', 'FEB', 'MRZ', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'],
