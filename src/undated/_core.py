@@ -46,8 +46,7 @@ def add_months(year: int, month: int, day: int, months: int) -> Tuple[int, int, 
     """
 
     month += months
-    x = 1
-
+ 
     if month > 12:
         year += (month - 1) // 12
         month = ((month - 1) % 12) + 1
