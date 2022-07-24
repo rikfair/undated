@@ -9,7 +9,7 @@
    :maxdepth: 1
 
    Overview <self>
-   Examples <examples>
+   Tutorial <tutorial>
 
 .. toctree::
    :caption: API DOCUMENTATION

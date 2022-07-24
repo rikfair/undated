@@ -31,7 +31,7 @@ Installation
 ============
 
 The package can be found on `GitHub <https://github.com/rikfair/undated>`_ and `PyPI <https://pypi.org/project/undated/>`_,
-so the easiest way to install it is with `pip``
+so naturally install it is with `pip``
 
 .. code-block::
 
