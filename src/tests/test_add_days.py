@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 # -----------------------------------------------
 """
-    DESCRIPTION:
-        Unit tests for the undated module
-        Benchmarking against datetime
+Unit tests for the undated module
+Benchmarking against datetime
 
-    ASSUMPTIONS:
-        No assumptions to note
+**ASSUMPTIONS**
+    No assumptions to note
 
-    LIMITATIONS:
-        No limitations to note
+**LIMITATIONS**
+    No limitations to note
 """
 # -----------------------------------------------
 
@@ -77,8 +76,8 @@ def get_datetime_answer(input_date, days):
 class TestAddDays(unittest.TestCase):
     """ Tests the add_days function """
 
-    def test_valid(self):
-        """ Tests valid parameters give expected answers, benchmarking against datetime """
+    def test_specific(self):
+        """ Tests edge values, benchmarking against datetime """
 
         for i in TEST_DATA:
             for j in [1, -1]:
@@ -104,6 +103,22 @@ class TestAddDays(unittest.TestCase):
         self.assertEqual(ymd.iymd, None, 'Invalid ymd')
         self.assertEqual(ud.add_days(ymd, 1), ud.INVALID_YMD)
         self.assertEqual(ud.days_between(ymd, ud.YMD(20220101)), None)
+
+    # ---
+
+    def test_loop(self):
+        """ Increamental test, benchmarking against datetime """
+
+        start_year, start_month, start_day = 1998, 1, 1
+        start_ud = ud.YMD(start_year, start_month, start_day)
+        start_dt = datetime.datetime(start_year, start_month, start_day)
+
+        for factor in [1, -1]:
+            for i in range(50_000):
+                i *= factor
+                test_ud = start_ud + i
+                test_dt = int((start_dt + datetime.timedelta(days=i)).strftime('%Y%m%d'))
+                self.assertEqual(test_ud, test_dt, f'Not equal: {test_ud}, {i}')
 
 
 # -----------------------------------------------

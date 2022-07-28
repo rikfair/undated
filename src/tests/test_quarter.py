@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 # -----------------------------------------------
 """
-    DESCRIPTION:
-        Unit tests for the undated module.
-        No similar function in datetime for benchmarking.
+Unit tests for the undated module.
+No similar function in datetime for benchmarking.
 
-    ASSUMPTIONS:
-        No assumptions to note
+**ASSUMPTIONS**
+    No assumptions to note
 
-    ACCURACY:
-        No accuracy issues to note
+**LIMITATIONS**
+    No limitations note
 """
 # -----------------------------------------------
 

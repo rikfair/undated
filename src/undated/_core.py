@@ -1,14 +1,11 @@
-#!/usr/bin/python3
-# -----------------------------------------------
 """
-    DESCRIPTION:
-        Core functions for the tools and utils modules
+Core functions for the undated modules
 
-    ASSUMPTIONS:
-        See init, no further assumptions to note
+**ASSUMPTIONS**
+    See init, no further assumptions to note
 
-    LIMITATIONS:
-        See init, no further limitations to note
+**LIMITATIONS**
+    See init, no further limitations to note
 """
 # -----------------------------------------------
 
@@ -28,8 +25,6 @@ DAYS_SO_FAR = (
     (0, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366)   # Leap year
 )
 
-FORMAT_PARTS = {'Y': 4, 'y': 2, 'm': 2, 'd': 2}
-
 THIS_YEAR = int(datetime.date.today().strftime('%Y'))
 
 # -----------------------------------------------
@@ -46,7 +41,7 @@ def add_months(year: int, month: int, day: int, months: int) -> Tuple[int, int, 
     """
 
     month += months
- 
+
     if month > 12:
         year += (month - 1) // 12
         month = ((month - 1) % 12) + 1
@@ -75,72 +70,6 @@ def add_weekdays(epoch: int, weekdays: int) -> Tuple[int, int, int]:
     weekend_adjust = 0 if 0 < weekday + days < 6 else 2
     days_to_add = (weeks * 7) + days + weekend_adjust
     return epoch_to_parts(epoch + days_to_add)
-
-
-# -----------------------------------------------
-
-
-def as_parts(
-        idate: Union[int, str],
-        fmt: str,
-        yy_pivot: int = None) -> Union[Tuple[int, int, int], None]:
-    """
-    Converts the ymd input to the Ymd format from the given format
-    :param idate: int or str, the date value, missing month or day defaults to 1.
-    :param fmt: str, the date format. Valid values: Yymd, in any order.
-    :param yy_pivot: the pivot year for two digit years
-    :return: tuple, the date parts, or None or date invalid
-    """
-
-    # ---
-    # Check the format is valid
-
-    if (
-            not fmt
-            or len(fmt) > 3
-            or [fp for fp in fmt if fp not in FORMAT_PARTS]
-            or len(set(fmt.upper())) != len(fmt)
-    ):
-        return None  # <---- Invalid fmt value
-
-    # ---
-    # Check the length of the idate matches the format
-
-    sdate = str(idate)
-    len_expected = sum(FORMAT_PARTS[fp] for fp in fmt)
-
-    if len(sdate) != len_expected:
-        if len(sdate) + 1 == len_expected and fmt[:1] in ['m', 'd']:
-            sdate = '0' + sdate
-        else:
-            return None  # <---- Return None if unexpected length
-
-    # ---
-    # Find year, month and day
-
-    parts = {'Y': None, 'M': 1, 'D': 1}
-
-    for i in fmt:
-        parts[i.upper()], sdate = int(sdate[:FORMAT_PARTS[i]]), sdate[FORMAT_PARTS[i]:]
-
-    if sdate:
-        return None  # <---- Return None if values unallocated
-
-    # ---
-    # Process 2 digit years
-
-    if 'y' in fmt:
-        if not yy_pivot:
-            yy_pivot = THIS_YEAR - 80
-        century = THIS_YEAR // 100
-        century -= (1 if parts['Y'] > yy_pivot else 0)
-        parts['Y'] = (century * 100) + parts['Y']
-
-    # ---
-
-    if is_valid(parts['Y'], parts['M'], parts['D']):
-        return parts['Y'], parts['M'], parts['D']
-    return None
 
 
 # -----------------------------------------------

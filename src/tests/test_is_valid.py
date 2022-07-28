@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 # -----------------------------------------------
 """
-    DESCRIPTION:
-        Unit tests for the undated module
-        Benchmarking against datetime
+Unit tests for the undated module
+Benchmarking against datetime
 
-    ASSUMPTIONS:
-        No assumptions to note
+**ASSUMPTIONS**
+    No assumptions to note
 
-    LIMITATIONS:
-        No limitations to note
+**LIMITATIONS**
+    No limitations to note
 """
 # -----------------------------------------------
 

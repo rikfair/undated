@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 # -----------------------------------------------
 """
-    DESCRIPTION:
-        Unit tests for the undated module
-        Benchmarking against datetime
+Unit tests for the undated module
+Benchmarking against datetime
 
-    ASSUMPTIONS:
-        No assumptions to note
+**ASSUMPTIONS**
+    No assumptions to note
 
-    LIMITATIONS:
-        No limitations to note
+**LIMITATIONS**
+    No limitations to note
 """
 # -----------------------------------------------
 
@@ -97,6 +96,27 @@ class TestAddMonths(unittest.TestCase):
 
         ymd = ud.YMD(0)
         self.assertEqual(ud.add_months(ymd, 1), ud.INVALID_YMD)
+
+    # ---
+
+    def test_loop(self):
+        """ Increamental test, benchmarking against datetime """
+
+        start_year, start_month, start_day = 1998, 1, 1
+        start_ud = ud.YMD(start_year, start_month, start_day)
+        start_dt = datetime.datetime(start_year, start_month, start_day)
+
+        for period in [0, -1]:
+            for factor in [1, -1]:
+                for mth in range(1, 4000):
+                    fmth = mth * factor
+                    fperiod = period * factor
+                    test_ud = start_ud.add_months(fmth, period=bool(period))
+                    test_dt = int(
+                        ((start_dt + relativedelta(months=fmth))
+                         + datetime.timedelta(days=fperiod)).strftime('%Y%m%d')
+                    )
+                    self.assertEqual(test_ud, test_dt, f'{test_ud}, {mth}, {factor}, {period}')
 
 
 # -----------------------------------------------

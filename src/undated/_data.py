@@ -1,6 +1,15 @@
 """
 Data for use within the package
+
+**ASSUMPTIONS**
+    See init, no further assumptions to note
+
+**LIMITATIONS**
+    See init, no further limitations to note
 """
+# -----------------------------------------------
+
+FORMAT_PARTS = {'Y': 4, 'y': 2, 'm': 2, 'd': 2}
 
 # -----------------------------------------------
 # Disabling line too long, as these are just months of the year
@@ -28,7 +37,8 @@ SPLITS = {
     ),
     '6Y2': (
         ((2, 2, 2), ('year', 'month', 'day')),
-        ((2, 2, 2), ('month', 'year', 'day'))
+        ((2, 2, 2), ('month', 'year', 'day')),
+        ((2, 2, 2), ('day', 'month', 'year'))
     ),
     6: (
         ((4, 2), ('year', 'month')),

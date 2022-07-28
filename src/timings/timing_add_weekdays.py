@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 # -----------------------------------------------
 """
-    DESCRIPTION:
-        Timing to check the undated module performance
+Timing to check the undated module performance
 
-    ASSUMPTIONS:
-        No assumptions to note
+**ASSUMPTIONS**
+    No assumptions to note
 
-    LIMITATIONS:
-        No limitations to note
+**LIMITATIONS**
+    No limitations to note
 """
 # -----------------------------------------------
 

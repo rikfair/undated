@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 # -----------------------------------------------
 """
-    DESCRIPTION:
-        Timing to check how the undated module compares with datetime
-        when using dates that are int type
+Timing to check how the undated module compares with datetime
+when using dates that are int type
 
-    ASSUMPTIONS:
-        No assumptions to note
+**ASSUMPTIONS**
+    No assumptions to note
 
-    LIMITATIONS:
-        No limitations to note
+**LIMITATIONS**
+    No limitations to note
 """
 # -----------------------------------------------
 

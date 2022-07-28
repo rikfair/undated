@@ -1,5 +1,5 @@
 @echo off
-REM # Updated 14:06 08/07/2022
+REM # Updated 16:39 28/07/2022
 REM # ###
 
 cd %~dp0 | exit 1
@@ -8,13 +8,20 @@ set HOME=.
 set PYTHONHOME=c:\python\3.7\
 for %%I in (.) do set REPOS=%%~nI%%~xI
 
-echo Confirm "%REPOS%" version number has been updated?
+echo Confirm all files are saved?
+pause
+
+echo Confirm "%REPOS%" version number has been updated (setup.cfg, docs/conf.py)?
 pause
 
 rmdir /s /q .\dist
 
 cd .\src
 forfiles /P . /M *.egg-info /C "cmd /c rmdir /s /q @file"
+cd ..
+
+cd .\docs
+%PYTHONHOME%Scripts\sphinx-build.exe -a -b html . _build
 cd ..
 
 %PYTHONHOME%\python -m pip install --upgrade build

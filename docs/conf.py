@@ -18,11 +18,11 @@ sys.path.insert(0, os.path.abspath('../src/'))
 # -- Project information -----------------------------------------------------
 
 project = 'undated'
-copyright = '2022, Rik Fairbrother'
-author = 'Rik Fairbrother'
+copyright = '2022, rikfair'
+author = 'rikfair'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = '0.0.2b'
 
 
 # -- General configuration ---------------------------------------------------

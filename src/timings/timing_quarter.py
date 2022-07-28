@@ -1,20 +1,20 @@
 #!/usr/bin/python3
 # -----------------------------------------------
 """
-    DESCRIPTION:
-        Timing to check the undated module performance
+Timing to check the undated module performance
 
-    ASSUMPTIONS:
-        No assumptions to note
+**ASSUMPTIONS**
+    No assumptions to note
 
-    LIMITATIONS:
-        No limitations to note
+**LIMITATIONS**
+    No limitations to note
 """
 # -----------------------------------------------
 
 import timeit
 
 import undated as ud
+import undated.utils as udu
 
 # -----------------------------------------------
 
@@ -26,9 +26,12 @@ def run_timings(number=10_000, quarters=None):
         quarters = [2022_03, 2022_09_20]
 
     for quarter in quarters:
+        ymd = ud.YMD(quarter)
         print(f'\nTiming quarter: {quarter}')
-        test_a = timeit.timeit(lambda q=quarter: ud.quarter(q), number=number)
-        print(f'-Undated...: {test_a}')
+        test_a = timeit.timeit(lambda x=ymd: ud.quarter(x), number=number)
+        print(f'-Tools...: {test_a}')
+        test_b = timeit.timeit(lambda x=quarter: udu.quarter(x), number=number)
+        print(f'-Utils...: {test_b}')
 
 
 # -----------------------------------------------
