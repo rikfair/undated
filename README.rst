@@ -1,6 +1,22 @@
 Undated - *"For when dates aren't dates"*
 =========================================
 
+.. image:: https://www.codefactor.io/repository/github/rikfair/undated/badge/main
+   :target: https://www.codefactor.io/repository/github/rikfair/undated/overview/main
+   :alt: CodeFactor
+
+.. image:: https://github.com/rikfair/undated/actions/workflows/pylint.yml/badge.svg
+   :target: https://github.com/rikfair/undated/actions/workflows/pylint.yml
+   :alt: pylint
+
+.. image:: https://github.com/rikfair/undated/actions/workflows/unittest.yml/badge.svg
+   :target: https://github.com/rikfair/undated/actions/workflows/unittest.yml
+   :alt: unittest
+   
+.. image:: https://readthedocs.org/projects/undated/badge/?version=latest
+   :target: https://undated.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+   
 *undated* is a Python package that simplifies the process of working with dates that are stored as numbers or strings.
 
 Whilst datatypes should fit their purpose, date types do not always transport well and are converted to a number or string,
