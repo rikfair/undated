@@ -505,7 +505,7 @@ class UndatedFormat:
 
 def as_parts(
         sdate: Union[int, str],
-        fmt: [str, UndatedFormat],
+        fmt: Union[str, UndatedFormat],
         yy_pivot: int = None) -> Union[tuple, None]:
     """
     Converts the sdate to year, month, day, based on the format

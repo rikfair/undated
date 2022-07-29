@@ -8,11 +8,10 @@ set HOME=.
 set PYTHONHOME=c:\python\3.7\
 for %%I in (.) do set REPOS=%%~nI%%~xI
 
-echo Confirm all files are saved?
+echo Confirm all file are saved and "%REPOS%" version number has been updated (setup.cfg, docs/conf.py).
 pause
 
-echo Confirm "%REPOS%" version number has been updated (setup.cfg, docs/conf.py)?
-pause
+echo Removing old distribution files
 
 rmdir /s /q .\dist
 
@@ -20,12 +19,31 @@ cd .\src
 forfiles /P . /M *.egg-info /C "cmd /c rmdir /s /q @file"
 cd ..
 
+
+echo Installing required packages
+
+%PYTHONHOME%\python -m pip install --upgrade  --no-warn-script-location pip
+%PYTHONHOME%\python -m pip install --upgrade build
+%PYTHONHOME%\python -m pip install --upgrade  --no-warn-script-location pylint
+%PYTHONHOME%\python -m pip install --upgrade python-dateutil
+%PYTHONHOME%\python -m pip install --upgrade  --no-warn-script-location Sphinx
+%PYTHONHOME%\python -m pip install --upgrade sphinx-rtd-theme
+%PYTHONHOME%\python -m pip install --upgrade twine
+
+echo Running pylint
+%PYTHONHOME%\python -m pylint "%HOME%/src"
+echo Confirm pylint was successful
+pause
+
+echo Running unittests
+%PYTHONHOME%\python -m unittest discover "%HOME%/src/tests"
+echo Confirm unittests were successful
+pause
+
 cd .\docs
-%PYTHONHOME%Scripts\sphinx-build.exe -a -b html . _build
+%PYTHONHOME%\Scripts\sphinx-build.exe -a -b html . _build
 cd ..
 
-%PYTHONHOME%\python -m pip install --upgrade build
-%PYTHONHOME%\python -m pip install --upgrade twine
 
 %PYTHONHOME%\python -m build
 

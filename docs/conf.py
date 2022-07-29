@@ -22,7 +22,7 @@ copyright = '2022, rikfair'
 author = 'rikfair'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.2b'
+release = '0.0.3b'
 
 
 # -- General configuration ---------------------------------------------------
