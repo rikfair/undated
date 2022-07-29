@@ -26,6 +26,6 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files 'src/*.py')
-    -name: Running unittests
+    - name: Running unittests
       run: |
-        python -m unittest discover "src/tests/"
+        python -m unittest discover 'src/tests/'
