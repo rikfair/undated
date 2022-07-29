@@ -36,13 +36,13 @@ and works solely with dates stored as integers in the ``Ymd`` format
 Limitations
 -----------
 
-``undated`` was designed with data processing in mind, using the Gregorian calendar.
-It makes no adjustment for the Julian calendar changeover and will treat any dates before 1583 as invalid.
+``undated`` was designed with data processing of recent (-ish) dates in mind. Thus it uses the Gregorian calendar
+and makes no adjustment for the Julian calendar changeover. Thus it will treat any dates before 1583 as invalid.
 
 Common Parameter Names
 ----------------------
 
-Parameter names have been standardised as much as possible, to be more intuitive and understandable.
+Parameter names have been standardised as much as possible, to be more consistent, intuitive and understandable.
 
 - **day**: the day of the month as an integer
 - **fmt**: the date format string or can sometimes be the udf.UndatedFormat object

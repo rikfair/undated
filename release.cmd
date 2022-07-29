@@ -40,11 +40,14 @@ echo Running unittests
 echo Confirm unittests were successful
 pause
 
+echo Creating sphinx documentation
 cd .\docs
 %PYTHONHOME%\Scripts\sphinx-build.exe -a -b html . _build
 cd ..
+echo Confirm sphinx documentation build was successful
+pause
 
-
+echo Building project
 %PYTHONHOME%\python -m build
 
 echo Check build is correct before proceeding
