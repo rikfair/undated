@@ -5,12 +5,12 @@ The Three Modules
 -----------------
 
 *undated* consists of three main modules, ``undated``, ``undated.fmts`` and ``undated.utils``.
-These are distinctly seperated for performance, to limit import overhead.
+These are distinctly separated for performance, to limit import overhead.
 
 **undated** 
 
 The undated module, is the main module for manipulating dates, it consists of a main class object for managing a date as an integer
-and several functions for further functionality. All of these are hopefully self explanitory. 
+and several functions for further functionality. All of these are hopefully self-explanatory. 
 
 **undated.fmts**
 
@@ -36,8 +36,8 @@ and works solely with dates stored as integers in the ``Ymd`` format
 Limitations
 -----------
 
-``undated`` was designed with data processing of recent (-ish) dates in mind. Thus it uses the Gregorian calendar
-and makes no adjustment for the Julian calendar changeover. Thus it will treat any dates before 1583 as invalid.
+``undated`` was designed with data processing of recent (-ish) dates in mind. Because of this it uses the Gregorian calendar
+and makes no adjustment for the Julian calendar changeover. Thus, it will treat any dates before 1583 as invalid.
 
 Common Parameter Names
 ----------------------
@@ -52,12 +52,12 @@ Parameter names have been standardised as much as possible, to be more consisten
 - **sdate**: a date string or integer of no specific format 
 - **year**: the year as an integer
 - **ymd**: a ud.YMD class object
-- **yy_pivot**: for processing two digit years, the lower bound for converting two digit years to four digits
+- **yy_pivot**: for processing two-digit years, the lower bound for converting two-digit years to four-digit years
 
 undated YMD Class
 -----------------
 
-The class ``ud.YMD`` is the go to tool, when manipulation of the dates is required during processing.
+The class ``ud.YMD`` is the go-to tool, when manipulation of the dates is required during processing.
 
 .. code-block:: python3
 
@@ -126,7 +126,7 @@ gives the results
    add 10 weekdays = 20220718
    minus 10 weekdays = 20220620
 
-The ``undated`` module also contains severval *between* functions, that accept two YMD class objects.
+The ``undated`` module also contains several *between* functions, that accept two YMD class objects.
 These calculate the days between two dates, the complete months between two dates or the weekdays, Monday to Friday, between two dates.
 
 .. code-block:: python3
@@ -208,7 +208,7 @@ Further Date Formats
 --------------------
 
 The ``Deriver`` will try and derive the format from most common date presentations.
-The code below is definately not how the package has been designed to be used but it does show the various date formats that can be accepted.
+The code below is definitely not how the package has been designed to be used but it does show the various date formats that can be accepted.
 
 .. code-block:: python3
 
@@ -291,12 +291,12 @@ Hints
 Hints help the ``Deriver``, especially when there are fewer dates to use to derive the format.
 Current hints are:
 
-- ``udf.Y2`` the year is two digits
+- ``udf.Y2`` the year is two-digits
 - ``udf.YFIRST`` the year is in the first position
 - ``udf.YLAST`` the year is in the last position
 - ``udf.YM`` the date only includes the year and month
 
-The following code applies the hints for two digit years, and the year in the last position.
+The following code applies the hints for two-digit years, and the year in the last position.
 
 .. code-block:: python3
 
@@ -339,7 +339,7 @@ In the above case, the format would not be derivable without specifying the lang
 The language parameter above is ``EN1``. The ``EN`` refers to the language,
 other valid options are ``DE`` German, ``ES`` Spanish and ``FR`` French.
 The ``1`` indicates that we are using the abbreviated months, ``2`` being for full month names.
-For example ``ES2`` would be full Spanish month names, ``FR1`` would be abbreviated French months.
+For example, ``ES2`` would be full Spanish month names, ``FR1`` would be abbreviated French months.
 
 Time Separator
 ^^^^^^^^^^^^^^
@@ -367,11 +367,11 @@ gives the result
 YY Pivot
 ^^^^^^^^
 
-The ``udf.YY_PIVOT`` property is used to determine how the century is applied to two digit years.
-By default the ``undated`` pivot year is the current year minus 80.
+The ``udf.YY_PIVOT`` property is used to determine how the century is applied to two-digit years.
+By default, the ``undated`` pivot year is the current year minus 80.
 The default Excel pivot year is set as 40.
-The value should be a four digit year. ``1940`` would mean any two digit year 40 or over would be given the century ``19``.
-Any two digit year ``39`` and under will be given the century ``20``.
+The value should be a four-digit year. ``1940`` would mean any two-digit year 40 or over would be given the century ``19``.
+Any two-digit year ``39`` and under will be given the century ``20``.
 
 .. code-block:: python3
 
@@ -400,11 +400,11 @@ gives the result
 String Formats
 --------------
 
-The ``UndatedFormat`` object is not designed to be created manually. So, if the date format is simple and known, string based formats can be used.
+The ``UndatedFormat`` object is not designed to be created manually. So, if the date format is simple and known, string-based formats can be used.
 These use the letters ``YyMmd`` along with the ``-`` character to indicate a separator.
 
-- **Y**: 4 digit year
-- **y**: 2 digit year
+- **Y**: 4-digit year
+- **y**: 2-digit year
 - **M**: the month as a string
 - **m**: the month as an integer
 - **d**: the day as an integer

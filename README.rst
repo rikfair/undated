@@ -5,6 +5,10 @@ Undated - *"For when dates aren't dates"*
    :target: https://www.codefactor.io/repository/github/rikfair/undated/overview/main
    :alt: CodeFactor
 
+.. image:: https://github.com/rikfair/undated/actions/workflows/codeql-analysis.yml/badge.svg
+   :target: https://github.com/rikfair/undated/actions/workflows/codeql-analysis.yml
+   :alt: CodeQL
+
 .. image:: https://github.com/rikfair/undated/actions/workflows/pylint.yml/badge.svg
    :target: https://github.com/rikfair/undated/actions/workflows/pylint.yml
    :alt: pylint
@@ -37,6 +41,15 @@ Inception
 *undated* came about due to the need to process large amounts of data from various sources. These were received as csv files
 where the format of the date was dependant on either the country of origin, source system, or which ever way the wind blew.
 One solution was required to enable big data to be processed regardless of its date formatting... *undated*.
+
+Concept
+=======
+
+*undated* is a lightweight performance tunded package envisaged to be used either:
+- when processing data from various sources where the date format is unknown but consistent throughout the data
+- or when dates have been stored as integers in the ``Ymd`` format and performance is a consideration.
+
+For other scenarios consider using a feature rich package such as `dateutils <https://pypi.org/project/python-dateutil/>` 
 
 Supported Versions
 ==================
