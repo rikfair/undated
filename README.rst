@@ -46,10 +46,10 @@ Concept
 =======
 
 *undated* is a lightweight performance tunded package envisaged to be used either:
-- when processing data from various sources where the date format is unknown but consistent throughout the data
-- or when dates have been stored as integers in the ``Ymd`` format and performance is a consideration.
+ - when processing data from various sources where the date format is unknown but consistent throughout the data
+ - or when dates have been stored as integers in the ``Ymd`` format and performance is a consideration.
 
-For other scenarios consider using a feature rich package such as `dateutils <https://pypi.org/project/python-dateutil/>` 
+For other scenarios consider using a feature rich package such as `dateutils <https://pypi.org/project/python-dateutil/>`_
 
 Supported Versions
 ==================
