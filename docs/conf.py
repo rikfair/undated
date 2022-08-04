@@ -14,6 +14,9 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../src/'))
 
+import undated as ud
+
+
 
 # -- Project information -----------------------------------------------------
 
@@ -22,7 +25,7 @@ copyright = '2022, rikfair'
 author = 'rikfair'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.3b'
+release = ud.__version__
 
 
 # -- General configuration ---------------------------------------------------

@@ -8,5 +8,7 @@ All of these are hopefully self explanitory.
 
 from ._tools import *
 
+__version__ = '1.0.7'
+
 # -----------------------------------------------
 # End.
