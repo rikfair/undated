@@ -45,7 +45,7 @@ One solution was required to enable big data to be processed regardless of its d
 Concept
 =======
 
-*undated* is a lightweight performance tunded package envisaged to be used either:
+*undated* is a lightweight performance tuned package envisaged to be used either:
  - when processing data from various sources where the date format is unknown but consistent throughout the data
  - or when dates have been stored as integers in the ``Ymd`` format and performance is a consideration.
 
