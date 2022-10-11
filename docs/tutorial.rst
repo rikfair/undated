@@ -160,7 +160,7 @@ It loops through the data until it finds a date that can be of only one format.
    The deriver has been designed to solve the problem where different data sources provide dates in different formats.
    The deriver assumes that all dates from the same data source, IE those passed to its search method, are all in the same format.
 
-The following examples uses the `tutorial.csv file on GitHub <https://github.com/rikfair/undated/doc/tutorial.csv>`_.
+The following examples uses the `tutorial.csv file on GitHub <https://github.com/rikfair/undated/blob/main/docs/tutorial.csv>`_.
 Each date column contains dates in different formats, to represent the different data files being received.
 
 In this example, the deriver is passed a column of date data, ``date1`` in this case, to derive. 

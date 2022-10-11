@@ -94,6 +94,21 @@ def days_between(from_iymd: int, to_iymd: int) -> int:
 # -----------------------------------------------
 
 
+def first_day(iym: int) -> int:
+    """
+    Converts a year month integer to a year month day integer, as at the first day of the month
+    Simple formula, exists for completion.
+
+    :param iym: The year month in Ym format
+    :return: The year month day in Ymd format
+    """
+
+    return (iym * 100) + 1
+
+
+# -----------------------------------------------
+
+
 def is_leap_year(year: int) -> int:
     """
     Is the year a leap year
@@ -135,6 +150,21 @@ def is_weekday(iymd: int) -> bool:
 
 # -----------------------------------------------
 
+
+def last_day(iym: int) -> int:
+    """
+    Converts a year month integer to a year month day integer, as at the last day of the month
+
+    :param iym: The year month in Ym format
+    :return: The year month day in Ymd format
+    """
+
+    return udc.glue_parts(*udc.epoch_to_parts(
+        udc.epoch_from_parts(*udc.add_months(iym // 100, iym % 100, 1, 1)) - 1
+    ))
+
+
+# -----------------------------------------------
 
 def months_between(from_iymd: Union[int, udt.YMD], to_iymd: Union[int, udt.YMD]) -> int:
     """
